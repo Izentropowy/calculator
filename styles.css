@@ -63,11 +63,16 @@ body{
     font-size: 2em;
 }
 
+.btn:hover{
+    opacity: 0.7;
+}
+
 .equals{
     background-color: rgb(31, 31, 163);
     color: white;
 }
 
-.operator, .ac{
+.operator, .ac, .ce{
     background-color: rgba(0, 0, 0, 0.5);
 }
+
