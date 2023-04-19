@@ -12,33 +12,30 @@ const equals = document.querySelector('.equals');
 const operators = operatorButtons.map(button => button.textContent);
 const numbers = numberButtons.map(button => button.textContent);
 
-function updateCurrent(button){
-    current.textContent += button.textContent;
+function updateCurrent(operation){
+    current.textContent += operation;
     currentValue = current.textContent.trim();
     lastSymbol = currentValue.charAt(currentValue.length - 1);
 }
 
-operatorButtons.forEach(button => button.addEventListener('click', () => {
-    if(operators.includes(lastSymbol)){
-        current.textContent = current.textContent.slice(0, -1);
-    }
-    updateCurrent(button);
-}));
+function updateTotal(operation){
+    total.textContent = operation + " =";
+}
 
-numberButtons.forEach(button => button.addEventListener('click', () => {
-    if (currentValue === '0'){
-        current.textContent = '';
-    }
-    updateCurrent(button);
-}));
+function clearCurrent(){
+    current.textContent = '';
+}
 
-equals.addEventListener('click', () => {
-    if (operators.includes(lastSymbol)){
-        return;
-    }
-    total.textContent = currentValue;
-    currentValueArray = Array.from(currentValue);
-    currentValueArray = currentValueArray.reduce((acc, val) => {
+function clearTotal(){
+    total.textContent = '';
+}
+
+function clearLast(){
+    current.textContent = current.textContent.slice(0, -1);
+}
+
+function adjustNumbersInArray(arr){
+    adjusted = arr.reduce((acc, val) => {
         if (!isNaN(val) && !isNaN(acc[acc.length - 1])) {
           // If both the current and previous elements are numeric, combine them and update the last element of the accumulator
           acc[acc.length - 1] += val;
@@ -48,19 +45,27 @@ equals.addEventListener('click', () => {
         }
         return acc;
     }, []);
-    while (currentValueArray.length > 2)
-    {
-        firstNum = currentValueArray.shift();
-        sign = currentValueArray.shift();
-        secondNum = currentValueArray.shift();
-        result = operate(firstNum, sign, secondNum);
-        currentValueArray.unshift(result);
-        console.log(result);
-        console.log(currentValueArray);
-    }
-})
+    return adjusted;
+}
 
-function operate(firstNum, sign, secondNum){
+function operateAll(arr){
+    // if onle one number is entered
+    let result = arr[arr.length-1];
+    
+    // from array with numbers separated by operators, operate on each consecutive pair of numbers and replace each pair with a result
+    while (arr.length > 2)
+    {
+        result = 0;
+        let firstNum = arr.shift();
+        let sign = arr.shift();
+        let secondNum = arr.shift();
+        result = operateSinglePair(firstNum, sign, secondNum);
+        arr.unshift(result);
+    }
+    return result;
+}
+
+function operateSinglePair(firstNum, sign, secondNum){
     if (sign === '+'){
         return parseInt(firstNum) + parseInt(secondNum);
     }
@@ -74,6 +79,31 @@ function operate(firstNum, sign, secondNum){
         return firstNum / secondNum;
     }
 }
+
+operatorButtons.forEach(button => button.addEventListener('click', () => {
+    if(operators.includes(lastSymbol)){
+        clearLast();
+    }
+    updateCurrent(button.textContent);
+}));
+
+numberButtons.forEach(button => button.addEventListener('click', () => {
+    if (currentValue === '0'){
+        clearCurrent();
+    }
+    updateCurrent(button.textContent);
+}));
+
+equals.addEventListener('click', () => {
+    if (operators.includes(lastSymbol)){
+        return;
+    }
+    updateTotal(currentValue);
+    currentValueArray = adjustNumbersInArray(Array.from(currentValue));
+    let result = operateAll(currentValueArray);
+    clearCurrent();
+    updateCurrent(result);
+})
 // if NUMBER is clicked
     // if current === '0' => overwrite current with NUMBER
     // else => append current
