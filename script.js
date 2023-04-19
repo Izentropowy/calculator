@@ -40,7 +40,7 @@ function zero(){
 function reset(){
     clearCurrent();
     clearTotal();
-    zero()
+    zero();
 }
 
 function isLetter(str) {
@@ -109,6 +109,26 @@ function operateAll(arr){
     return result;
 }
 
+function getResult(){
+    if (operators.includes(lastSymbol)){
+        return;
+    }
+    updateTotal(current.textContent);
+    currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
+    let result = operateAll(currentValueArray);
+    clearCurrent();
+    updateCurrent(result);
+}
+
+function clearEntry(){
+    if (current.textContent.length > 1){
+        clearLast();
+    }
+    else{
+        reset();
+    }
+}
+
 operatorButtons.forEach(button => button.addEventListener('click', () => {
     if(operators.includes(lastSymbol)){
         clearLast();
@@ -123,29 +143,15 @@ numberButtons.forEach(button => button.addEventListener('click', () => {
     updateCurrent(button.textContent);
 }));
 
-equals.addEventListener('click', () => {
-    if (operators.includes(lastSymbol)){
-        return;
-    }
-    updateTotal(current.textContent);
-    currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
-    let result = operateAll(currentValueArray);
-    clearCurrent();
-    updateCurrent(result);
-})
-
-ac.addEventListener('click', () => {
-    reset();
-})
-
-ce.addEventListener('click', () => {
-    if (current.textContent.length > 1){
-        clearLast();
-    }
-    else{
-        reset();
-    }
-})
+equals.addEventListener('click', () => getResult());
+ac.addEventListener('click', () => reset());
+ce.addEventListener('click', () => clearEntry());
 
 // populate current and total at the beginning
 zero();
+
+// TODO
+    // negative numbers bug
+    // overflow bug
+    // decimal points bug
+    // ???
