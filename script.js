@@ -104,6 +104,22 @@ equals.addEventListener('click', () => {
     clearCurrent();
     updateCurrent(result);
 })
+
+ac.addEventListener('click', () => {
+    clearCurrent();
+    clearTotal();
+    updateCurrent('0');
+    total.textContent = '0';
+})
+
+ce.addEventListener('click', () => {
+    if (currentValue.length > 1){
+        clearLast();
+    }
+    else{
+        updateCurrent('0');
+    }
+})
 // if NUMBER is clicked
     // if current === '0' => overwrite current with NUMBER
     // else => append current
