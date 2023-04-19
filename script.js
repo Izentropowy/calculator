@@ -34,18 +34,55 @@ function clearLast(){
     current.textContent = current.textContent.slice(0, -1);
 }
 
+function isLetter(str) {
+    return /^[a-z]+$/i.test(str);
+}
+
 function adjustNumbersInArray(arr){
-    adjusted = arr.reduce((acc, val) => {
+    // I is the first leter from "Infinity"
+    if (arr.includes('I')){
+        arr = arr.reduce((acc, val) => {
+            console.log(acc, val);
+            if (isLetter(val) && acc.length > 0){
+                acc[acc.length - 1] += val;
+            }
+            else{
+                acc.push(val);
+            }
+            return acc;
+        }, []);
+    }
+    console.log(arr);
+    let adjusted = arr.reduce((acc, val) => {
         if (!isNaN(val) && !isNaN(acc[acc.length - 1])) {
-          // If both the current and previous elements are numeric, combine them and update the last element of the accumulator
-          acc[acc.length - 1] += val;
-        } else {
-          // Otherwise, just add the current element to the accumulator
-          acc.push(val);
+            // If both the current and previous elements are numeric, combine them and update the last element of the accumulator
+            acc[acc.length - 1] += val;
+        } 
+        else {
+            // Otherwise, just add the current element to the accumulator
+            acc.push(val);
         }
         return acc;
     }, []);
     return adjusted;
+}
+
+function operateSinglePair(firstNum, sign, secondNum){
+    if (sign === '+'){
+        return parseInt(firstNum) + parseInt(secondNum);
+    }
+    else if (sign === '-'){
+        return firstNum - secondNum;
+    }
+    else if (sign === '*'){
+        return firstNum * secondNum;
+    }
+    else if (sign === '/'){
+        return firstNum / secondNum;
+    }
+    else if (firstNum === "Infinity"){
+        return Infinity;
+    }
 }
 
 function operateAll(arr){
@@ -63,21 +100,6 @@ function operateAll(arr){
         arr.unshift(result);
     }
     return result;
-}
-
-function operateSinglePair(firstNum, sign, secondNum){
-    if (sign === '+'){
-        return parseInt(firstNum) + parseInt(secondNum);
-    }
-    else if (sign === '-'){
-        return firstNum - secondNum;
-    }
-    else if (sign === '*'){
-        return firstNum * secondNum;
-    }
-    else{
-        return firstNum / secondNum;
-    }
 }
 
 operatorButtons.forEach(button => button.addEventListener('click', () => {
@@ -120,23 +142,3 @@ ce.addEventListener('click', () => {
         updateCurrent('0');
     }
 })
-// if NUMBER is clicked
-    // if current === '0' => overwrite current with NUMBER
-    // else => append current
-
-// if OPERATOR is clicked
-    // if last in operators => overwrite last
-    // else append current
-
-// if EQUALS is clicked
-    // if last in operators => do nothing
-    // else
-        // calculate current
-        // display current in total
-        // display result in current
-
-// if CE is clicked
-    // clear last
-
-// if AC is clicked
-    // clear current and total
