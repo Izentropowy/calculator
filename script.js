@@ -1,8 +1,6 @@
 var current = document.querySelector('.current');
 var total = document.querySelector('.total');
-var currentValue = current.textContent.trim();
-var totalValue = total.textContent.trim();
-var lastSymbol = currentValue.charAt(currentValue.length - 1);
+var lastSymbol = current.textContent.charAt(current.textContent.length - 1);
 var operatorButtons = Array.from(document.querySelectorAll('.operator')); 
 var numberButtons = Array.from(document.querySelectorAll('.number'));
 
@@ -14,8 +12,7 @@ const numbers = numberButtons.map(button => button.textContent);
 
 function updateCurrent(operation){
     current.textContent += operation;
-    currentValue = current.textContent.trim();
-    lastSymbol = currentValue.charAt(currentValue.length - 1);
+    lastSymbol = current.textContent.charAt(current.textContent.length - 1);
 }
 
 function updateTotal(operation){
@@ -32,6 +29,18 @@ function clearTotal(){
 
 function clearLast(){
     current.textContent = current.textContent.slice(0, -1);
+    clearCurrent();
+    updateCurrent(current.textContent);
+}
+function zero(){
+    current.textContent = '0';
+    total.textContent = '0';
+}
+
+function reset(){
+    clearCurrent();
+    clearTotal();
+    zero()
 }
 
 function isLetter(str) {
@@ -39,10 +48,9 @@ function isLetter(str) {
 }
 
 function adjustNumbersInArray(arr){
-    // I is the first leter from "Infinity"
+    // I is the first leter from "Infinity", transform it into a single element
     if (arr.includes('I')){
         arr = arr.reduce((acc, val) => {
-            console.log(acc, val);
             if (isLetter(val) && acc.length > 0){
                 acc[acc.length - 1] += val;
             }
@@ -52,7 +60,6 @@ function adjustNumbersInArray(arr){
             return acc;
         }, []);
     }
-    console.log(arr);
     let adjusted = arr.reduce((acc, val) => {
         if (!isNaN(val) && !isNaN(acc[acc.length - 1])) {
             // If both the current and previous elements are numeric, combine them and update the last element of the accumulator
@@ -86,7 +93,7 @@ function operateSinglePair(firstNum, sign, secondNum){
 }
 
 function operateAll(arr){
-    // if onle one number is entered
+    // if only one number is entered
     let result = arr[arr.length-1];
     
     // from array with numbers separated by operators, operate on each consecutive pair of numbers and replace each pair with a result
@@ -110,7 +117,7 @@ operatorButtons.forEach(button => button.addEventListener('click', () => {
 }));
 
 numberButtons.forEach(button => button.addEventListener('click', () => {
-    if (currentValue === '0'){
+    if (current.textContent === '0'){
         clearCurrent();
     }
     updateCurrent(button.textContent);
@@ -120,25 +127,25 @@ equals.addEventListener('click', () => {
     if (operators.includes(lastSymbol)){
         return;
     }
-    updateTotal(currentValue);
-    currentValueArray = adjustNumbersInArray(Array.from(currentValue));
+    updateTotal(current.textContent);
+    currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
     let result = operateAll(currentValueArray);
     clearCurrent();
     updateCurrent(result);
 })
 
 ac.addEventListener('click', () => {
-    clearCurrent();
-    clearTotal();
-    updateCurrent('0');
-    total.textContent = '0';
+    reset();
 })
 
 ce.addEventListener('click', () => {
-    if (currentValue.length > 1){
+    if (current.textContent.length > 1){
         clearLast();
     }
     else{
-        updateCurrent('0');
+        reset();
     }
 })
+
+// populate current and total at the beginning
+zero();
