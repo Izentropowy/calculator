@@ -12,7 +12,7 @@ const equals = document.querySelector('.equals');
 
 function operateSinglePair(firstNum, sign, secondNum){
     if (sign === '+'){
-        return parseInt(firstNum) + parseInt(secondNum);
+        return parseFloat(firstNum) + parseFloat(secondNum);
     }
     else if (sign === '-'){
         return firstNum - secondNum;
@@ -72,6 +72,9 @@ function adjustNumbersInArray(arr){
             // if "-" is the first element
             acc[acc.length - 1] += val;
         }
+        else if (val === "."){
+            acc[acc.length - 1] += val;
+        }
         else {
             // Otherwise, just add the current element to the accumulator
             acc.push(val);
@@ -87,6 +90,7 @@ function getResult(){
     }
     updateTotal(current.textContent);
     currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
+    console.log(currentValueArray);
     let result = operateAll(currentValueArray);
     clearCurrent();
     updateCurrent(result);
@@ -114,6 +118,7 @@ function clearLast(){
     clearCurrent();
     updateCurrent(temp);
 }
+
 function zero(){
     current.textContent = '0';
     total.textContent = '0';
@@ -139,7 +144,7 @@ function clearEntry(){
 }
 
 function numberClicked(button){
-    if (current.textContent === '0'){
+    if (current.textContent === '0' && button.textContent != "."){
         clearCurrent();
     }
     updateCurrent(button.textContent);
@@ -167,3 +172,4 @@ zero();
 // TODO
     // decimal points bug
     // allow operations with negative numbers that come after / or *
+
