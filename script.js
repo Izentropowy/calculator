@@ -9,7 +9,6 @@ const numbers = numberButtons.map(button => button.textContent);
 const ac = document.querySelector('.ac');
 const ce = document.querySelector('.ce');
 const equals = document.querySelector('.equals');
-const minus = document.getElementById('minus');
 
 function updateCurrent(operation){
     current.textContent += operation;
@@ -146,30 +145,20 @@ function numberClicked(button){
 }
 
 function operatorClicked(button){
+    if (lastSymbol === "-"){
+        return;
+    }
     if(operators.includes(lastSymbol)){
         clearLast();
     }
     updateCurrent(button.textContent);
 }
 
-function defineMinus(currentValue, last){
-    // treat minus as a number
-    if (!last === '0' || operators.includes(last)){
-        numberClicked(minus);
-    }
-    // treat minus as an operator
-    else {
-        operatorClicked(minus);
-    }
-}
-
 operatorButtons.forEach(button => button.addEventListener('click', () => operatorClicked(button)));
 numberButtons.forEach(button => button.addEventListener('click', () => numberClicked(button)));
-
 equals.addEventListener('click', () => getResult());
 ac.addEventListener('click', () => reset());
 ce.addEventListener('click', () => clearEntry());
-minus.addEventListener('click', () => defineMinus(current.textContent, lastSymbol));
 
 // populate current and total at the beginning
 zero();
