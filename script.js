@@ -29,9 +29,9 @@ function clearTotal(){
 }
 
 function clearLast(){
-    current.textContent = current.textContent.slice(0, -1);
+    temp = current.textContent.slice(0, -1);
     clearCurrent();
-    updateCurrent(current.textContent);
+    updateCurrent(temp);
 }
 function zero(){
     current.textContent = '0';
@@ -130,7 +130,7 @@ function getResult(){
 }
 
 function clearEntry(){
-    if (current.textContent.length > 1 && !current.textContent === "Infinity"){
+    if (current.textContent.length > 1 && current.textContent != "Infinity"){
         clearLast();
     }
     else{
@@ -151,16 +151,6 @@ function operatorClicked(button){
     }
     updateCurrent(button.textContent);
 }
-operatorButtons.forEach(button => button.addEventListener('click', () => operatorClicked(button)));
-numberButtons.forEach(button => button.addEventListener('click', () => numberClicked(button)));
-
-equals.addEventListener('click', () => getResult());
-ac.addEventListener('click', () => reset());
-ce.addEventListener('click', () => clearEntry());
-minus.addEventListener('click', () => defineMinus(current.textContent, lastSymbol));
-
-// populate current and total at the beginning
-zero();
 
 function defineMinus(currentValue, last){
     // treat minus as a number
@@ -173,10 +163,18 @@ function defineMinus(currentValue, last){
     }
 }
 
+operatorButtons.forEach(button => button.addEventListener('click', () => operatorClicked(button)));
+numberButtons.forEach(button => button.addEventListener('click', () => numberClicked(button)));
+
+equals.addEventListener('click', () => getResult());
+ac.addEventListener('click', () => reset());
+ce.addEventListener('click', () => clearEntry());
+minus.addEventListener('click', () => defineMinus(current.textContent, lastSymbol));
+
+// populate current and total at the beginning
+zero();
+
 // TODO
-    // negative numbers bug
-        // if 0 is currentValue, overwrite 0 to -
-        // if there is nothing in front of - or it's the operator, treat it as part of value
     // overflow bug
     // decimal points bug
-    // ???
+    // CE bugs
