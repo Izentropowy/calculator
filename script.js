@@ -145,6 +145,9 @@ function numberClicked(button){
 }
 
 function operatorClicked(button){
+    if (current.textContent === '0' && button.textContent === '-'){
+        clearCurrent();
+    }
     if(operators.includes(lastSymbol)){
         return;
     }
