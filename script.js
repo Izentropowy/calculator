@@ -121,7 +121,7 @@ function getResult(){
 }
 
 function clearEntry(){
-    if (current.textContent.length > 1){
+    if (current.textContent.length > 1 && !current.textContent === "Infinity"){
         clearLast();
     }
     else{
