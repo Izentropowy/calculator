@@ -4,11 +4,12 @@ var lastSymbol = current.textContent.charAt(current.textContent.length - 1);
 var operatorButtons = Array.from(document.querySelectorAll('.operator')); 
 var numberButtons = Array.from(document.querySelectorAll('.number'));
 
+const operators = operatorButtons.map(button => button.textContent);
+const numbers = numberButtons.map(button => button.textContent);
 const ac = document.querySelector('.ac');
 const ce = document.querySelector('.ce');
 const equals = document.querySelector('.equals');
-const operators = operatorButtons.map(button => button.textContent);
-const numbers = numberButtons.map(button => button.textContent);
+const minus = document.getElementById('minus');
 
 function updateCurrent(operation){
     current.textContent += operation;
@@ -64,7 +65,15 @@ function adjustNumbersInArray(arr){
         if (!isNaN(val) && !isNaN(acc[acc.length - 1])) {
             // If both the current and previous elements are numeric, combine them and update the last element of the accumulator
             acc[acc.length - 1] += val;
-        } 
+        }
+        else if (acc[acc.length - 1] === "-" && operators.includes(acc[acc.length - 2])){
+            // if previous is "-" and one before previous is an operator
+            acc[acc.length - 1] += val;
+        }
+        else if (acc[acc.length - 1] === "-" && acc.length === 1){
+            // if "-" is the first element
+            acc[acc.length - 1] += val;
+        }
         else {
             // Otherwise, just add the current element to the accumulator
             acc.push(val);
@@ -129,29 +138,45 @@ function clearEntry(){
     }
 }
 
-operatorButtons.forEach(button => button.addEventListener('click', () => {
-    if(operators.includes(lastSymbol)){
-        clearLast();
-    }
-    updateCurrent(button.textContent);
-}));
-
-numberButtons.forEach(button => button.addEventListener('click', () => {
+function numberClicked(button){
     if (current.textContent === '0'){
         clearCurrent();
     }
     updateCurrent(button.textContent);
-}));
+}
+
+function operatorClicked(button){
+    if(operators.includes(lastSymbol)){
+        clearLast();
+    }
+    updateCurrent(button.textContent);
+}
+operatorButtons.forEach(button => button.addEventListener('click', () => operatorClicked(button)));
+numberButtons.forEach(button => button.addEventListener('click', () => numberClicked(button)));
 
 equals.addEventListener('click', () => getResult());
 ac.addEventListener('click', () => reset());
 ce.addEventListener('click', () => clearEntry());
+minus.addEventListener('click', () => defineMinus(current.textContent, lastSymbol));
 
 // populate current and total at the beginning
 zero();
 
+function defineMinus(currentValue, last){
+    // treat minus as a number
+    if (!last === '0' || operators.includes(last)){
+        numberClicked(minus);
+    }
+    // treat minus as an operator
+    else {
+        operatorClicked(minus);
+    }
+}
+
 // TODO
     // negative numbers bug
+        // if 0 is currentValue, overwrite 0 to -
+        // if there is nothing in front of - or it's the operator, treat it as part of value
     // overflow bug
     // decimal points bug
     // ???
