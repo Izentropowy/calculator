@@ -40,6 +40,7 @@ function operateAll(arr){
         let sign = arr.shift();
         let secondNum = arr.shift();
         result = operateSinglePair(firstNum, sign, secondNum);
+        result = Math.round(result * Math.pow(10, 6)) / Math.pow(10, 6);
         arr.unshift(result);
     }
     return result;
@@ -164,6 +165,5 @@ ce.addEventListener('click', () => clearEntry());
 zero();
 
 // TODO
-    // overflow bug
     // decimal points bug
-    // CE bugs
+    // allow operations with negative numbers that come after / or *
