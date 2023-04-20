@@ -10,41 +10,39 @@ const ac = document.querySelector('.ac');
 const ce = document.querySelector('.ce');
 const equals = document.querySelector('.equals');
 
-function updateCurrent(operation){
-    current.textContent += operation;
-    lastSymbol = current.textContent.charAt(current.textContent.length - 1);
+function operateSinglePair(firstNum, sign, secondNum){
+    if (sign === '+'){
+        return parseInt(firstNum) + parseInt(secondNum);
+    }
+    else if (sign === '-'){
+        return firstNum - secondNum;
+    }
+    else if (sign === '*'){
+        return firstNum * secondNum;
+    }
+    else if (sign === '/'){
+        return firstNum / secondNum;
+    }
+    else if (firstNum === "Infinity"){
+        return Infinity;
+    }
 }
 
-function updateTotal(operation){
-    total.textContent = operation + " =";
-}
-
-function clearCurrent(){
-    current.textContent = '';
-}
-
-function clearTotal(){
-    total.textContent = '';
-}
-
-function clearLast(){
-    temp = current.textContent.slice(0, -1);
-    clearCurrent();
-    updateCurrent(temp);
-}
-function zero(){
-    current.textContent = '0';
-    total.textContent = '0';
-}
-
-function reset(){
-    clearCurrent();
-    clearTotal();
-    zero();
-}
-
-function isLetter(str) {
-    return /^[a-z]+$/i.test(str);
+function operateAll(arr){
+    // if only one number is entered
+    let result = arr[arr.length-1];
+    
+    // from array with numbers separated by operators, operate on each consecutive pair of numbers and replace each pair with a result
+    while (arr.length > 2)
+    {
+        result = 0;
+        let firstNum = arr.shift();
+        let sign = arr.shift();
+        let secondNum = arr.shift();
+        result = operateSinglePair(firstNum, sign, secondNum);
+        arr.unshift(result);
+    }
+    return result;
 }
 
 function adjustNumbersInArray(arr){
@@ -82,41 +80,6 @@ function adjustNumbersInArray(arr){
     return adjusted;
 }
 
-function operateSinglePair(firstNum, sign, secondNum){
-    if (sign === '+'){
-        return parseInt(firstNum) + parseInt(secondNum);
-    }
-    else if (sign === '-'){
-        return firstNum - secondNum;
-    }
-    else if (sign === '*'){
-        return firstNum * secondNum;
-    }
-    else if (sign === '/'){
-        return firstNum / secondNum;
-    }
-    else if (firstNum === "Infinity"){
-        return Infinity;
-    }
-}
-
-function operateAll(arr){
-    // if only one number is entered
-    let result = arr[arr.length-1];
-    
-    // from array with numbers separated by operators, operate on each consecutive pair of numbers and replace each pair with a result
-    while (arr.length > 2)
-    {
-        result = 0;
-        let firstNum = arr.shift();
-        let sign = arr.shift();
-        let secondNum = arr.shift();
-        result = operateSinglePair(firstNum, sign, secondNum);
-        arr.unshift(result);
-    }
-    return result;
-}
-
 function getResult(){
     if (operators.includes(lastSymbol)){
         return;
@@ -126,6 +89,43 @@ function getResult(){
     let result = operateAll(currentValueArray);
     clearCurrent();
     updateCurrent(result);
+}
+
+function updateCurrent(operation){
+    current.textContent += operation;
+    lastSymbol = current.textContent.charAt(current.textContent.length - 1);
+}
+
+function updateTotal(operation){
+    total.textContent = operation + " =";
+}
+
+function clearCurrent(){
+    current.textContent = '';
+}
+
+function clearTotal(){
+    total.textContent = '';
+}
+
+function clearLast(){
+    temp = current.textContent.slice(0, -1);
+    clearCurrent();
+    updateCurrent(temp);
+}
+function zero(){
+    current.textContent = '0';
+    total.textContent = '0';
+}
+
+function reset(){
+    clearCurrent();
+    clearTotal();
+    zero();
+}
+
+function isLetter(str) {
+    return /^[a-z]+$/i.test(str);
 }
 
 function clearEntry(){
@@ -145,11 +145,8 @@ function numberClicked(button){
 }
 
 function operatorClicked(button){
-    if (lastSymbol === "-"){
-        return;
-    }
     if(operators.includes(lastSymbol)){
-        clearLast();
+        return;
     }
     updateCurrent(button.textContent);
 }
