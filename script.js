@@ -182,7 +182,4 @@ ce.addEventListener('click', () => clearEntry());
 // populate current and total at the beginning
 zero();
 
-// TODO
-    // infinity * 0 gives NaN
-    // do not allow to enter a minus after a dot
 
