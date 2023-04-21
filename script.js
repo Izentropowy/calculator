@@ -144,13 +144,19 @@ function clearEntry(){
 }
 
 function numberClicked(button){
+    currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
+    lastNumber = currentValueArray[currentValueArray.length-1]
     if (button.textContent === "."){
-        currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
-        if (currentValueArray[currentValueArray.length-1].includes(".") || operators.includes(lastSymbol)){
+        if (lastNumber.includes(".") || operators.includes(lastSymbol)){
             return;
         }
     }
+    if (["0", "-0"].includes(lastNumber)){
+        // prevent e.g. "5-06"
+        clearLast();
+    }
     if (["0", "-0"].includes(current.textContent) && button.textContent != "."){
+        // prevent "0000"
         clearCurrent();
     }
     updateCurrent(button.textContent);
