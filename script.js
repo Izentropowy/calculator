@@ -144,6 +144,9 @@ function clearEntry(){
 }
 
 function numberClicked(button){
+    if (current.textContent.includes(".") && button.textContent === "."){
+        return;
+    }
     if (current.textContent === '0' && button.textContent != "."){
         clearCurrent();
     }
@@ -170,6 +173,7 @@ ce.addEventListener('click', () => clearEntry());
 zero();
 
 // TODO
-    // decimal points bug
     // allow operations with negative numbers that come after / or *
+    // infinity * 0 gives NaN
+    // disable "." when on current
 
