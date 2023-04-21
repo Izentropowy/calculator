@@ -154,8 +154,18 @@ function numberClicked(button){
 }
 
 function operatorClicked(button){
+    console.log(lastSymbol);
+    console.log(button.textContent);
     if (current.textContent === '0' && button.textContent === '-'){
         clearCurrent();
+    }
+    if (['*', '/'].includes(lastSymbol) && numbers.includes(current.textContent[current.textContent.length - 2])){
+        // if last symbol is * or \ and one before is a number
+        if (button.textContent === '-'){
+            // allow to multiply or divide by negative numbers
+            updateCurrent(button.textContent);
+            return;
+        }
     }
     if(operators.includes(lastSymbol)){
         return;
@@ -175,5 +185,4 @@ zero();
 // TODO
     // allow operations with negative numbers that come after / or *
     // infinity * 0 gives NaN
-    // disable "." when on current
 
