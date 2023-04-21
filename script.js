@@ -9,6 +9,7 @@ const numbers = numberButtons.map(button => button.textContent);
 const ac = document.querySelector('.ac');
 const ce = document.querySelector('.ce');
 const equals = document.querySelector('.equals');
+const decimal = document.querySelector('.decimal');
 
 function operateSinglePair(firstNum, sign, secondNum){
     if (sign === '+'){
@@ -90,7 +91,6 @@ function getResult(){
     }
     updateTotal(current.textContent);
     currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
-    console.log(currentValueArray);
     let result = operateAll(currentValueArray);
     clearCurrent();
     updateCurrent(result);
@@ -145,7 +145,8 @@ function clearEntry(){
 
 function numberClicked(button){
     if (button.textContent === "."){
-        if (current.textContent.includes(".") || operators.includes(lastSymbol)){
+        currentValueArray = adjustNumbersInArray(Array.from(current.textContent));
+        if (currentValueArray[currentValueArray.length-1].includes(".") || operators.includes(lastSymbol)){
             return;
         }
     }
