@@ -135,7 +135,7 @@ function isLetter(str) {
 }
 
 function clearEntry(){
-    if (current.textContent.length > 1 && current.textContent != "Infinity"){
+    if (current.textContent.length > 1 && Math.abs(current.textContent) != Infinity){
         clearLast();
     }
     else{
@@ -144,18 +144,18 @@ function clearEntry(){
 }
 
 function numberClicked(button){
-    if (current.textContent.includes(".") && button.textContent === "."){
-        return;
+    if (button.textContent === "."){
+        if (current.textContent.includes(".") || operators.includes(lastSymbol)){
+            return;
+        }
     }
-    if (current.textContent === '0' && button.textContent != "."){
+    if (current.textContent == Math.abs(0) && button.textContent != "."){
         clearCurrent();
     }
     updateCurrent(button.textContent);
 }
 
 function operatorClicked(button){
-    console.log(lastSymbol);
-    console.log(button.textContent);
     if (current.textContent === '0' && button.textContent === '-'){
         clearCurrent();
     }
@@ -167,7 +167,7 @@ function operatorClicked(button){
             return;
         }
     }
-    if(operators.includes(lastSymbol)){
+    if(operators.includes(lastSymbol) || lastSymbol === "."){
         return;
     }
     updateCurrent(button.textContent);
@@ -183,6 +183,6 @@ ce.addEventListener('click', () => clearEntry());
 zero();
 
 // TODO
-    // allow operations with negative numbers that come after / or *
     // infinity * 0 gives NaN
+    // do not allow to enter a minus after a dot
 
