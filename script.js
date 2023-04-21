@@ -149,7 +149,7 @@ function numberClicked(button){
             return;
         }
     }
-    if (current.textContent == Math.abs(0) && button.textContent != "."){
+    if (["0", "-0"].includes(current.textContent) && button.textContent != "."){
         clearCurrent();
     }
     updateCurrent(button.textContent);
